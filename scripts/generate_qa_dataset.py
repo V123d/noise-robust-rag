@@ -4,10 +4,17 @@ from openai import OpenAI
 import time
 import os
 
-# 配置与 04/05 相同的大模型 API 信息
-API_KEY = "sk-8c998af7bd73446683c969fcee175a6c"
+# 所有配置优先读取环境变量，未设置时以错误提示引导用户配置 .env
+API_KEY = os.environ.get("DASHSCOPE_API_KEY", "")
 BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
-MODEL_NAME = "qwen-plus" 
+MODEL_NAME = "qwen-plus"
+
+if not API_KEY:
+    raise EnvironmentError(
+        "未设置 DASHSCOPE_API_KEY 环境变量。请复制 .env.example 为 .env，"
+        "填入你的 DashScope API Key 后重试。\n"
+        "申请地址: https://dashscope.console.aliyun.com/"
+    ) 
 
 def generate_qa_pairs():
     print("正在加载语料库...")

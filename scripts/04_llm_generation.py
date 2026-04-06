@@ -1,15 +1,26 @@
 import os
 from openai import OpenAI
 
+DEFAULT_API_KEY = os.environ.get("DASHSCOPE_API_KEY", "")
+DEFAULT_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+DEFAULT_MODEL_NAME = "qwen-plus"
+
+
 class RAGGenerator:
     """
     面向事实一致性的 RAG 生成模块
     负责将检索到的高质量上下文与 User Query 融合成 Prompt，并调用 LLM 生成最终答案。
     """
-    def __init__(self, api_key, base_url, model_name):
-        # 增加明确的 timeout 和 max_retries 防止网络请求无响应导致进度条永久卡死
-        self.client = OpenAI(api_key=api_key, base_url=base_url, timeout=30.0, max_retries=3)
-        self.model_name = model_name
+    def __init__(self, api_key=None, base_url=None, model_name=None):
+        self.api_key = api_key or DEFAULT_API_KEY
+        self.base_url = base_url or DEFAULT_BASE_URL
+        self.model_name = model_name or DEFAULT_MODEL_NAME
+        if not self.api_key:
+            raise ValueError(
+                "未设置 DashScope API Key。请在 .env 文件中配置 DASHSCOPE_API_KEY，"
+                "或传入 api_key 参数。参考 .env.example"
+            )
+        self.client = OpenAI(api_key=self.api_key, base_url=self.base_url, timeout=30.0, max_retries=3)
 
     def build_prompt(self, query, context_list):
         """
