@@ -72,7 +72,6 @@
 │                                        # BAAI/bge-small-zh-v1.5（Bi-Encoder，33M 参数）
 │                                        # BAAI/bge-reranker-base（Cross-Encoder，279M 参数）
 │
-├── thesis_outline.md                       # 论文大纲（完整五章目录 + 配图计划）
 └── README.md                               # 本文件
 ```
 
